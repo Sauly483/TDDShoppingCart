@@ -14,7 +14,7 @@ class CheckoutServiceTest {
     List<String> items = List.of("apple", "orange", "banana");
     CheckoutService checkoutService = new CheckoutService();
 
-    List<String> checkedOutItems = checkoutService.checkout(items);
+    List<String> checkedOutItems = checkoutService.filterBasket(items);
     assertEquals(2, checkedOutItems.size());
   }
 
@@ -23,7 +23,7 @@ class CheckoutServiceTest {
     List<String> items = List.of("apple", "orange");
     CheckoutService checkoutService = new CheckoutService();
 
-    List<String> checkedOutItems = checkoutService.checkout(items);
+    List<String> checkedOutItems = checkoutService.filterBasket(items);
     BigDecimal total = checkoutService.total(checkedOutItems);
     assertEquals(new BigDecimal("0.85"), total);
   }
@@ -34,9 +34,41 @@ class CheckoutServiceTest {
     List<String> items = List.of("apple", "apple", "apple", "orange");
     CheckoutService checkoutService = new CheckoutService();
 
-    List<String> checkedOutItems = checkoutService.checkout(items);
+    List<String> checkedOutItems = checkoutService.filterBasket(items);
     BigDecimal total = checkoutService.total(checkedOutItems);
     assertEquals(new BigDecimal("2.05"), total);
+  }
+
+  @Test
+  void testTotalShouldBeZeroWhenNoValidItems() {
+    List<String> items = List.of("banana", "grape");
+    CheckoutService checkoutService = new CheckoutService();
+
+    List<String> checkedOutItems = checkoutService.filterBasket(items);
+    BigDecimal total = checkoutService.total(checkedOutItems);
+    assertEquals(BigDecimal.ZERO, total);
+  }
+
+  @Test
+  void testTotalShouldBeForOneAppleWithOffer() {
+    List<String> items = List.of("apple","apple");
+    CheckoutService checkoutService = new CheckoutService();
+
+    List<String> checkedOutItems = checkoutService.filterBasket(items);
+    BigDecimal total = checkoutService.total(checkedOutItems);
+
+    assertEquals(new BigDecimal("0.60"), total);
+  }
+
+  @Test
+  void testTotalShouldBeForOneOrangeWithOffer() {
+    List<String> items = List.of("orange","orange","orange");
+    CheckoutService checkoutService = new CheckoutService();
+
+    List<String> checkedOutItems = checkoutService.filterBasket(items);
+    BigDecimal total = checkoutService.total(checkedOutItems);
+
+    assertEquals(new BigDecimal("0.50"), total);
   }
 
 
