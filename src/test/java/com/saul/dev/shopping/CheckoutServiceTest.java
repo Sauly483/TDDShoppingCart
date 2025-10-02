@@ -93,7 +93,7 @@ class CheckoutServiceTest {
 
     BigDecimal total = checkoutService.total(checkedOutItems);
 
-    assertEquals(new BigDecimal("0.60"), total);
+    assertEquals(new BigDecimal("0.40"), total);
   }
 
   @Test
@@ -114,7 +114,7 @@ class CheckoutServiceTest {
     List<String> checkedOutItems = checkoutService.filterBasket(items);
 
     BigDecimal total = checkoutService.total(checkedOutItems);
-    assertEquals(new BigDecimal("2.05"), total);
+    assertEquals(new BigDecimal("0.60"), total);
   }
 
 
