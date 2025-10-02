@@ -7,7 +7,9 @@ public class CheckoutService {
 
   public List<String> filterBasket(List<String> items) {
 
-    return items.stream().filter(item -> item.equals("apple") || item.equals("orange")).toList();
+    return items.stream()
+        .filter(item -> item.equals("apple") ||
+            item.equals("orange") || item.equals("banana")).toList();
 
   }
 
@@ -15,12 +17,27 @@ public class CheckoutService {
 
     long appleCount = checkedOutItems.stream().filter(item -> item.equals("apple")).count();
     long orangeCount = checkedOutItems.stream().filter(item -> item.equals("orange")).count();
+    long bananaCount = checkedOutItems.stream().filter(item -> item.equals("banana")).count();
 
-    long chargeableApples = (appleCount / 2) + (appleCount % 2);
-    long chargeableOranges = (orangeCount / 3) * 2 + (orangeCount % 3);
+    List<Long> chargeableItems = calculateOffers(appleCount, orangeCount, bananaCount);
 
-    var appleTotal = Items.APPLE.getPrice().multiply(BigDecimal.valueOf(chargeableApples));
-    var orangeTotal = Items.ORANGE.getPrice().multiply(BigDecimal.valueOf(chargeableOranges));
-    return appleTotal.add(orangeTotal);
+
+    var appleTotal = Items.APPLE.getPrice().multiply(BigDecimal.valueOf(chargeableItems.get(0)));
+    var orangeTotal = Items.ORANGE.getPrice().multiply(BigDecimal.valueOf(chargeableItems.get(1)));
+    var bananaTotal = Items.BANANAS.getPrice().multiply(BigDecimal.valueOf(chargeableItems.get(2)));
+    return appleTotal.add(orangeTotal).add(bananaTotal);
   }
+
+  private List<Long> calculateOffers(final long appleCount, final long orangeCount, final long bananaCount) {
+
+    if (appleCount > 0 && bananaCount > 0) {
+      return List.of((appleCount / 2) + (appleCount % 2),
+          (orangeCount / 3) * 2 + (orangeCount % 3), (bananaCount - 1));
+    }
+    return List.of((appleCount / 2) + (appleCount % 2),
+        (orangeCount / 3) * 2 + (orangeCount % 3), (bananaCount /2) + (bananaCount %2));
+
+
+  }
+
 }
